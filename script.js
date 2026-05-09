@@ -1,4 +1,5 @@
 const slidy = document.getElementById("slidy");
+const colorPicker = document.querySelector(".cpicker");
 const output = document.getElementById("output");
 const gridy = document.querySelector(".grid");
 let isDrawing = false;
@@ -22,7 +23,7 @@ function buildGrid() {
 
         cell.addEventListener("mousedown", () => {
             isDrawing = true;
-            cell.style.backgroundColor = "black";
+            cell.style.backgroundColor = colorPicker.value;
         });
 
         cell.addEventListener("mouseup", () => {
@@ -31,7 +32,7 @@ function buildGrid() {
 
         cell.addEventListener("mouseover", () => {
             if (isDrawing) {
-                cell.style.backgroundColor = "black";
+                cell.style.backgroundColor = colorPicker.value;
             }
         });
     }
