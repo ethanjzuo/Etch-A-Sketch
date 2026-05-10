@@ -2,9 +2,46 @@ const slidy = document.getElementById("slidy");
 const colorPicker = document.querySelector(".cpicker");
 const output = document.getElementById("output");
 const gridy = document.querySelector(".grid");
-let isDrawing = false;
+const buttons = document.querySelectorAll(".btn");
 
-buildGrid();
+let isDrawing = false;
+let currentMode = "color";
+
+window.onmousedown = () => (isDrawing = true);
+window.onmouseup = () => (isDrawing = false);
+
+function buttonactive(buttonToActivate) {
+    buttons.forEach(btn => {
+        if (btn === buttonToActivate) {
+            btn.classList.add("active");
+            console.log(currentMode)
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+}
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const text = btn.textContent.trim();
+
+        if (text !== 'Clear') {
+            buttonactive(btn);
+        }
+
+        if (text === 'Rainbow') {
+            currentMode = 'rainbow';
+        } else if (text === 'Erase') {
+            currentMode = 'erase';
+        } else if (text === 'Color') {
+            currentMode = 'color';
+        } else if (text === 'Clear') {
+            // Instant clear logic
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(c => c.style.backgroundColor = 'white');
+        }
+    });
+});
 
 function buildGrid() {
     const size = slidy.value;
@@ -23,7 +60,14 @@ function buildGrid() {
 
         cell.addEventListener("mousedown", () => {
             isDrawing = true;
-            cell.style.backgroundColor = colorPicker.value;
+            if (currentMode === 'rainbow') {
+                const randomColor = `rgb(${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)})`;
+                cell.style.backgroundColor = randomColor;
+            } else if (currentMode === 'erase') {
+                cell.style.backgroundColor = "white";
+            } else {
+                cell.style.backgroundColor = colorPicker.value;
+            }
         });
 
         cell.addEventListener("mouseup", () => {
@@ -32,10 +76,19 @@ function buildGrid() {
 
         cell.addEventListener("mouseover", () => {
             if (isDrawing) {
-                cell.style.backgroundColor = colorPicker.value;
+                if (currentMode === 'rainbow') {
+                    const randomColor = `rgb(${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)},${Math.floor(Math.random()*256)})`;
+                    cell.style.backgroundColor = randomColor;
+                } else if (currentMode === 'erase') {
+                    cell.style.backgroundColor = "white";
+                } else {
+                    cell.style.backgroundColor = colorPicker.value;
+            }
             }
         });
-    }
+    }f
 }
 
 slidy.oninput = buildGrid;
+
+buildGrid();
